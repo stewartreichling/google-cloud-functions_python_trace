@@ -1,0 +1,3 @@
+#!/bin/bash
+
+gcloud beta functions deploy tracing --entry-point entrypoint --runtime python37 --trigger-http

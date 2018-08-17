@@ -1,0 +1,4 @@
+#!/bin/bash
+
+HTTPS_TRIGGER_URL=$(gcloud beta functions describe tracing --format='value(httpsTrigger.url)')
+curl $HTTPS_TRIGGER_URL
