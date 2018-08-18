@@ -48,15 +48,23 @@ account use for local authentication example once you've completed local
 development.
 
 ## Run locally
+Set the 'GCP_PROJECT' environment variable:
+```console
+$ export GCP_PROJECT=<YOUR PROJECT ID>
+```
+
 Execute the `bin/test-local` script to generate a mock request and send it to
 your function:
-
 ```console
 $ bash bin/test-local
-`download_image` took 299 milliseconds
-`process_image` took 35 milliseconds
-`upload_image` took 878 milliseconds
-Visit `https://console.cloud.google.com/traces/traces` to see tracing data for this request (id: `dev_LuhaxMkC`).
+Background thread started.
+`download_image` took 298 milliseconds
+`process_image` took 78 milliseconds
+`upload_image` took 949 milliseconds
+Visit `https://console.cloud.google.com/traces/traces` to see tracing data for this request (id: `dev_ipxsnNLx`).
+Sending all pending spans before terminated.
+Background thread exited.
+Sent all pending spans.
 ```
 
 Visit [Stackdriver Trace](https://console.cloud.google.com/traces/traces) in
