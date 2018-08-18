@@ -12,7 +12,7 @@ def test():
     trace_id = f"dev_{''.join(random.choices(string.ascii_letters, k=8))}"
     headers = {'X-Cloud-Trace-Context': trace_id}
     with app.test_request_context(headers=headers):
-        entrypoint(flask.request)
+        print(entrypoint(flask.request))
 
 
 if __name__ == '__main__':
