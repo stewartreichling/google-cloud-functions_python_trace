@@ -1,11 +1,13 @@
 """A function that shows use of `opencensus-trace` with Stackdriver Trace."""
 
-from flask import request
-from opencensus.trace.exporters import stackdriver_exporter
-from opencensus.trace import tracer as tracer_module
 import os
 import random
 import time
+from flask import request
+from opencensus.trace.exporters import stackdriver_exporter
+from opencensus.trace import tracer as tracer_module
+from opencensus.trace.exporters.transports.background_thread \
+    import BackgroundThreadTransport
 
 
 # Get Google Cloud project from environment
@@ -13,7 +15,9 @@ project_id = os.environ['GCP_PROJECT']
 
 
 # Initialize a Tracer that exports to Stackdriver
-exporter = stackdriver_exporter.StackdriverExporter(project_id=project_id)
+# Use BackgroundThreadTransport to avoid adding latency during execution
+exporter = stackdriver_exporter.StackdriverExporter(
+    project_id=project_id, transport=BackgroundThreadTransport)
 tracer = tracer_module.Tracer(exporter=exporter)
 
 
