@@ -6,8 +6,8 @@ Trace integration with Google Cloud Functions on the Python 3.7 runtime.
 
 The resulting trace data is exported to [Stackdriver Trace](https://cloud.google.com/trace/).
 
-The function mimics latency patterns of downloading an image, processes it
-locally and then uploads it to a remote server.
+The function mimics latency patterns that might be observed when downloading an
+image, processing it locally and then uploading it to a remote server.
 
 ## Set up your local development environment
 
