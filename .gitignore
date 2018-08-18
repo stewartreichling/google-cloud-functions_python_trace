@@ -1,7 +1,0 @@
-.gcloudignore
-.gitignore
-service-account.json
-env/
-.vscode
-__pycache__/
-requirements-dev.txt
