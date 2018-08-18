@@ -1,14 +1,24 @@
-# Overview
-This example shows how to use `opencensus-trace` in a Python function deployed
-to Google Cloud Functions to trace a request. The resulting trace data is
-exported to [Stackdriver Trace](https://cloud.google.com/trace/).
+# Using OpenCensus and Stackdriver Trace with Google Cloud Functions
 
-The Python function follows the pattern of a function that downloads an image,
-processes that image locally and then uploads the image to a remote server.
+## Overview
+This sample demonstrates use of the `opencensus-trace` package and Stackdriver
+Trace integration with Google Cloud Functions on the Python 3.7 runtime.
 
-# Set up your local development environment
+The resulting trace data is exported to [Stackdriver Trace](https://cloud.google.com/trace/).
 
-## Create and activate a virtual environment
+The function mimics latency patterns of downloading an image, processes it
+locally and then uploads it to a remote server.
+
+## Set up your local development environment
+
+### Pre-requisites
+* The Python 3.7 interpreter
+* `pip`
+* `virtualenv`
+* `curl`
+* The `gcloud` command-line tool
+
+### Create and activate a virtual environment
 Use `virtualenv` to create a python3 virtual environment:
 ```console
 $ virtualenv --python python3 env
@@ -19,24 +29,25 @@ Activate your newly-created virtual environment:
 $ source env/bin/activate
 ```
 
-## Install dependencies
+### Install dependencies
 Use `pip` to install project dependencies:
 ```console
 pip install -r requirements.txt
 ```
 
-## Set up local authentication
-The local development approach for this example involves interacting with live
+### Set up local authentication
+The local development approach for this sample involves interacting with live
 Google APIs (specifically, Stackdriver Trace). Calls to Google APIs must be
-authenticated. The client libraries handle authentication automatically once
-you [create a service account](https://cloud.google.com/docs/authentication/getting-started#creating_a_service_account)
+authenticated. Fortunately, the client library handles authentication
+automatically once you [create a service account](https://cloud.google.com/docs/authentication/getting-started#creating_a_service_account)
 and [set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable](https://cloud.google.com/docs/authentication/getting-started).
 
 Note that your deployed function will automatically use a default service
 account associated with Google Cloud Functions. You may delete the service
-account created as part of this example once you've completed local development.
+account use for local authentication example once you've completed local
+development.
 
-# Run locally
+## Run locally
 Execute the `bin/test-local` script to generate a mock request and send it to
 your function:
 
@@ -51,9 +62,9 @@ Visit `https://console.cloud.google.com/traces/traces` to see tracing data for t
 Visit [Stackdriver Trace](https://console.cloud.google.com/traces/traces) in
 your Google Cloud Console to see traces associated with your test request.
 
-# Deploy your function
-Execute the `bin/test-local` script to execute the `gcloud functions deploy`
-command with the appropriate parameters:
+## Deploy your function
+Execute the `bin/test-local` script to deploy a function named `tracing`
+using `gcloud`:
 
 ```console
 $ bash bin/deploy
