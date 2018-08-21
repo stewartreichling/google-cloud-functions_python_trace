@@ -48,9 +48,10 @@ account use for local authentication example once you've completed local
 development.
 
 ## Run locally
-Set the 'GCP_PROJECT' environment variable:
+Set the 'GCP_PROJECT' and 'FUNCTION_NAME' environment variables:
 ```console
 $ export GCP_PROJECT=<YOUR PROJECT ID>
+$ export FUNCTION_NAME=tracing_local
 ```
 
 Execute the `bin/test-local` script to generate a mock request and send it to

@@ -56,7 +56,8 @@ def entrypoint(request):
     tracer.span_context = span_context
 
     # Wrap function logic in a parent trace
-    with tracer.span():
+    function_name = os.environ['FUNCTION_NAME']
+    with tracer.span(name=function_name):
         run_tasks()
 
     url = 'https://console.cloud.google.com/traces/traces'
