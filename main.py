@@ -8,6 +8,7 @@ from opencensus.trace.exporters import stackdriver_exporter
 from opencensus.trace import tracer as tracer_module
 from opencensus.trace.exporters.transports.background_thread \
     import BackgroundThreadTransport
+from opencensus.trace.propagation import google_cloud_format
 
 
 # Get Google Cloud project from environment
@@ -19,6 +20,7 @@ project_id = os.environ['GCP_PROJECT']
 exporter = stackdriver_exporter.StackdriverExporter(
     project_id=project_id, transport=BackgroundThreadTransport)
 tracer = tracer_module.Tracer(exporter=exporter)
+propagator = google_cloud_format.GoogleCloudFormatPropagator()
 
 
 def execute_task(task_name, min_latency, max_latency):
@@ -49,12 +51,13 @@ def run_tasks():
 def entrypoint(request):
     """Execute tasks within a parent trace span when invoked via HTTP."""
     # Get the trace_id from the request's HTTP header
-    trace_id = request.headers['X-Cloud-Trace-Context']
+    span_context = \
+        propagator.from_header(request.headers['X-Cloud-Trace-Context'])
+    tracer.span_context = span_context
 
     # Wrap function logic in a parent trace
-    with tracer.span(name=trace_id):
+    with tracer.span():
         run_tasks()
 
     url = 'https://console.cloud.google.com/traces/traces'
-    return (f'Visit `{url}` to see tracing data for this request '
-            f'(id: `{trace_id}`).')
+    return (f'Visit `{url}` to see tracing data for this request.')

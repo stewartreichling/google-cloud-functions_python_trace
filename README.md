@@ -61,7 +61,7 @@ Background thread started.
 `download_image` took 298 milliseconds
 `process_image` took 78 milliseconds
 `upload_image` took 949 milliseconds
-Visit `https://console.cloud.google.com/traces/traces` to see tracing data for this request (id: `dev_ipxsnNLx`).
+Visit `https://console.cloud.google.com/traces/traces` to see tracing data for this request.
 Sending all pending spans before terminated.
 Background thread exited.
 Sent all pending spans.
@@ -85,5 +85,5 @@ deployed function:
 
 ```console
 $ bash bin/test-deployed
-Visit `https://console.cloud.google.com/traces/traces` to see tracing data for this request (id: `592f8cbcc21afd43b571a7f729b23bdc/12812703197617869446;o=1`).
+Visit `https://console.cloud.google.com/traces/traces` to see tracing data for this request. 
 ```
