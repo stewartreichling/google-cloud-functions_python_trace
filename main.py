@@ -1,4 +1,4 @@
-"""A function that shows use of `opencensus-trace` with Stackdriver Trace."""
+"""A Google Cloud Functions sample that uses Stackdriver Trace."""
 
 import datetime
 import os
@@ -10,6 +10,7 @@ from opencensus.trace import tracer as tracer_module
 from opencensus.trace.exporters.transports.background_thread \
     import BackgroundThreadTransport
 from opencensus.trace.propagation import google_cloud_format
+from opencensus.trace.ext.google_cloud_clientlibs.trace import trace_integration
 
 
 FILE_NAME = 'journal.txt'
@@ -85,6 +86,9 @@ def entrypoint(request):
     span_context = \
         propagator.from_header(request.headers['X-Cloud-Trace-Context'])
     tracer.span_context = span_context
+
+    # Enable tracing HTTP/gRPC calls issued by Google Cloud client libraries
+    trace_integration(tracer)
 
     # Wrap function logic in a parent trace
     function_name = os.environ['FUNCTION_NAME']

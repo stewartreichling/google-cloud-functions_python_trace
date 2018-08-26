@@ -3,11 +3,16 @@
 ## Overview
 This sample demonstrates use of the `opencensus-trace` package and Stackdriver
 Trace integration with Google Cloud Functions on the Python 3.7 runtime.
+following features are covered:
 
-The resulting trace data is exported to [Stackdriver Trace](https://cloud.google.com/trace/).
+* setting the span context using request headers set by Google Cloud Platform
+* automatically tracing HTTP/gRPC calls issued by Google Cloud client libraries
+* exporting traces to Stackdriver Trace using background thread transport
 
 The function downloads a text file (`journal.txt`) from a Cloud Storage bucket,
 appends a timestamp to that file and then uploads it back to the bucket.
+
+The resulting trace data is exported to [Stackdriver Trace](https://cloud.google.com/trace/).
 
 ## Set up your local development environment
 
