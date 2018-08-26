@@ -6,8 +6,8 @@ Trace integration with Google Cloud Functions on the Python 3.7 runtime.
 
 The resulting trace data is exported to [Stackdriver Trace](https://cloud.google.com/trace/).
 
-The function mimics latency patterns that might be observed when downloading an
-image, processing it locally and then uploading it to a remote server.
+The function downloads a text file (`journal.txt`) from a Cloud Storage bucket,
+appends a timestamp to that file and then uploads it back to the bucket.
 
 ## Set up your local development environment
 
@@ -47,21 +47,48 @@ account associated with Google Cloud Functions. You may delete the service
 account use for local authentication example once you've completed local
 development.
 
+### Create a Cloud Storage bucket with an empty text file
+This example downloads a text file from a Cloud Storage bucket, appends a
+timestamp to the body of the file, then uploads that file to the same bucket.
+
+Use `gsutil` (installed as part of `gcloud`) to create a bucket:
+```console
+$ gsutil mb gs://tracing-example
+Creating gs://tracing-example/...
+```
+
+Use `touch` to create a text file:
+```console
+$ touch journal.txt
+```
+
+Upload the file to your newly-created Cloud Storage bucket:
+```console
+$ gsutil cp journal.txt gs://tracing-example
+Copying file://journal.txt [Content-Type=text/plain]...
+/ [1 files][    0.0 B/    0.0 B]
+Operation completed over 1 objects.
+```
+
 ## Run locally
-Set the 'GCP_PROJECT' and 'FUNCTION_NAME' environment variables:
+Set the `GCP_PROJECT` and `FUNCTION_NAME` environment variables:
 ```console
 $ export GCP_PROJECT=<YOUR PROJECT ID>
 $ export FUNCTION_NAME=tracing_local
 ```
+
+Note that Cloud Functions automatically sets the `GCP_PROJECT` and
+`FUNCTION_NAME` environment variables. You won't need to set these environment
+variables during deployment.
 
 Execute the `bin/test-local` script to generate a mock request and send it to
 your function:
 ```console
 $ bash bin/test-local
 Background thread started.
-`download_image` took 298 milliseconds
-`process_image` took 78 milliseconds
-`upload_image` took 949 milliseconds
+File `journal.txt` downloaded to `journal.txt`.
+Appended `2018-08-26 08:07:01.689789` to `journal.txt`.
+File `journal.txt` uploaded to `journal.txt`.
 Visit `https://console.cloud.google.com/traces/traces` to see tracing data for this request.
 Sending all pending spans before terminated.
 Background thread exited.

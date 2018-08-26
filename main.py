@@ -1,9 +1,10 @@
 """A function that shows use of `opencensus-trace` with Stackdriver Trace."""
 
+import datetime
 import os
 import random
 import time
-from flask import request
+from google.cloud.storage import Client
 from opencensus.trace.exporters import stackdriver_exporter
 from opencensus.trace import tracer as tracer_module
 from opencensus.trace.exporters.transports.background_thread \
@@ -11,14 +12,18 @@ from opencensus.trace.exporters.transports.background_thread \
 from opencensus.trace.propagation import google_cloud_format
 
 
+FILE_NAME = 'journal.txt'
+BUCKET_NAME = 'tracing-example'
+
+
 # Get Google Cloud project from environment
-project_id = os.environ['GCP_PROJECT']
+PROJECT_ID = os.environ['GCP_PROJECT']
 
 
 # Initialize a Tracer that exports to Stackdriver
 # Use BackgroundThreadTransport to avoid adding latency during execution
 exporter = stackdriver_exporter.StackdriverExporter(
-    project_id=project_id, transport=BackgroundThreadTransport)
+    project_id=PROJECT_ID, transport=BackgroundThreadTransport)
 tracer = tracer_module.Tracer(exporter=exporter)
 propagator = google_cloud_format.GoogleCloudFormatPropagator()
 
@@ -30,22 +35,48 @@ def execute_task(task_name, min_latency, max_latency):
     print(f'`{task_name}` took {latency} milliseconds')
 
 
-def run_tasks():
-    """Run a series of simulated tasks wrapped in individual trace spans."""
-    # An example medium-lived task, e.g., downloading an image
-    task_name = 'download_image'
-    with tracer.span(name=task_name):
-        execute_task(task_name, 200, 400)
+def download_file(bucket, source_file_name):
+    """Download a file from Cloud Storage."""
+    blob = bucket.blob(source_file_name)
+    blob.download_to_filename(FILE_NAME)
+    print(f'File `{source_file_name}` downloaded to `{FILE_NAME}`.')
 
-    # An example medium-lived task, e.g., processing the image locally
-    task_name = 'process_image'
-    with tracer.span(name='process_image'):
-        execute_task(task_name, 25, 100)
 
-    # An example long-lived task, e.g., uploading the image to a remote server
-    task_name = 'upload_image'
-    with tracer.span(name='upload_image'):
-        execute_task(task_name, 400, 1000)
+def append_timestamp_to_file(file_name):
+    """Generate a timestamp and append it to the file."""
+    timestamp = datetime.datetime.now()
+    with open(file_name, 'a+') as f:
+        entry = f'{timestamp}\n'
+        f.write(entry)
+    print(f'Appended `{timestamp}` to `{file_name}`.')
+
+
+def upload_file(bucket, destination_file_name):
+    """Upload a file to Cloud Storage."""
+    blob = bucket.blob(destination_file_name)
+    blob.upload_from_filename(FILE_NAME)
+    print(f'File `{FILE_NAME}` uploaded to `{destination_file_name}`.')
+
+
+def add_journal_entry():
+    """Download a journal file, append a timestamp and upload the file."""
+
+    # Initialize a storage client
+    with tracer.span(name='initialize_client'):
+        storage_client = Client()
+        bucket = storage_client.get_bucket(BUCKET_NAME)
+
+    # Download 'journal.txt' from Cloud Storage.
+    with tracer.span(name='download_file'):
+        download_file(bucket, FILE_NAME)
+
+    # Append timestamp to downloaded copy of 'journal.txt'.
+    with tracer.span(name='append_timestamp_to_file'):
+        append_timestamp_to_file(FILE_NAME)
+
+    # Upload 'journal.txt' back to Cloud Storage.
+    with tracer.span(name='upload_file'):
+        upload_file(bucket, FILE_NAME)
 
 
 def entrypoint(request):
@@ -58,7 +89,7 @@ def entrypoint(request):
     # Wrap function logic in a parent trace
     function_name = os.environ['FUNCTION_NAME']
     with tracer.span(name=function_name):
-        run_tasks()
+        add_journal_entry()
 
     url = 'https://console.cloud.google.com/traces/traces'
-    return (f'Visit `{url}` to see tracing data for this request.')
+    return f'Visit `{url}` to see tracing data for this request.'
