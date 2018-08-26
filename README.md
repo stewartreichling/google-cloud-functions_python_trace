@@ -91,9 +91,9 @@ your function:
 ```console
 $ bash bin/test-local
 Background thread started.
-File `journal.txt` downloaded to `journal.txt`.
-Appended `2018-08-26 08:07:01.689789` to `journal.txt`.
-File `journal.txt` uploaded to `journal.txt`.
+`journal.txt` downloaded from Cloud Storage to `/tmp/journal.txt`.
+Appended `2018-08-26 10:33:05.852129` to `/tmp/journal.txt`.
+`/tmp/journal.txt` uploaded to Cloud Storage.
 Visit `https://console.cloud.google.com/traces/traces` to see tracing data for this request.
 Sending all pending spans before terminated.
 Background thread exited.

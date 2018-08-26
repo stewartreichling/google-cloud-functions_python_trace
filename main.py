@@ -12,7 +12,6 @@ from opencensus.trace.exporters.transports.background_thread \
 from opencensus.trace.propagation import google_cloud_format
 from opencensus.trace import config_integration
 
-
 FILE_NAME = 'journal.txt'
 BUCKET_NAME = 'tracing-example'
 
@@ -36,11 +35,12 @@ def execute_task(task_name, min_latency, max_latency):
     print(f'`{task_name}` took {latency} milliseconds')
 
 
-def download_file(bucket, source_file_name):
+def download_file(bucket, source_file_name, destination_file_name):
     """Download a file from Cloud Storage."""
     blob = bucket.blob(source_file_name)
-    blob.download_to_filename(FILE_NAME)
-    print(f'File `{source_file_name}` downloaded to `{FILE_NAME}`.')
+    blob.download_to_filename(destination_file_name)
+    print(f'`{source_file_name}` downloaded from Cloud Storage to '
+          f'`{destination_file_name}`.')
 
 
 def append_timestamp_to_file(file_name):
@@ -52,11 +52,11 @@ def append_timestamp_to_file(file_name):
     print(f'Appended `{timestamp}` to `{file_name}`.')
 
 
-def upload_file(bucket, destination_file_name):
+def upload_file(bucket, source_file_name, destination_file_name):
     """Upload a file to Cloud Storage."""
     blob = bucket.blob(destination_file_name)
-    blob.upload_from_filename(FILE_NAME)
-    print(f'File `{FILE_NAME}` uploaded to `{destination_file_name}`.')
+    blob.upload_from_filename(source_file_name)
+    print(f'`{source_file_name}` uploaded to Cloud Storage.')
 
 
 def add_journal_entry():
@@ -69,15 +69,19 @@ def add_journal_entry():
 
     # Download 'journal.txt' from Cloud Storage.
     with tracer.span(name='download_file'):
-        download_file(bucket, FILE_NAME)
+        source_file_name = FILE_NAME
+        destination_file_name = f'/tmp/{FILE_NAME}'
+        download_file(bucket, source_file_name, destination_file_name)
 
     # Append timestamp to downloaded copy of 'journal.txt'.
     with tracer.span(name='append_timestamp_to_file'):
-        append_timestamp_to_file(FILE_NAME)
+        append_timestamp_to_file(f'/tmp/{FILE_NAME}')
 
     # Upload 'journal.txt' back to Cloud Storage.
     with tracer.span(name='upload_file'):
-        upload_file(bucket, FILE_NAME)
+        source_file_name = f'/tmp/{FILE_NAME}'
+        destination_file_name = FILE_NAME
+        upload_file(bucket, source_file_name, destination_file_name)
 
 
 def entrypoint(request):
