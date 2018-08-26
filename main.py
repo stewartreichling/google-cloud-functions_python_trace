@@ -10,7 +10,7 @@ from opencensus.trace import tracer as tracer_module
 from opencensus.trace.exporters.transports.background_thread \
     import BackgroundThreadTransport
 from opencensus.trace.propagation import google_cloud_format
-from opencensus.trace.ext.google_cloud_clientlibs.trace import trace_integration
+from opencensus.trace import config_integration
 
 
 FILE_NAME = 'journal.txt'
@@ -88,7 +88,7 @@ def entrypoint(request):
     tracer.span_context = span_context
 
     # Enable tracing HTTP/gRPC calls issued by Google Cloud client libraries
-    trace_integration(tracer)
+    config_integration.trace_integrations(['google_cloud_clientlibs'], tracer)
 
     # Wrap function logic in a parent trace
     function_name = os.environ['FUNCTION_NAME']
