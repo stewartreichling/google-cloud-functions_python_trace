@@ -2,7 +2,7 @@
 
 ## Overview
 This sample demonstrates use of the `opencensus-trace` package and Stackdriver
-Trace integration with Google Cloud Functions on the Python 3.7 runtime.
+Trace integration with Google Cloud Functions on the Python 3.7 runtime. The
 following features are covered:
 
 * setting the span context using request headers set by Google Cloud Platform
