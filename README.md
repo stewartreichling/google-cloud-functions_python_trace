@@ -37,7 +37,7 @@ $ source env/bin/activate
 ### Install dependencies
 Use `pip` to install project dependencies:
 ```console
-pip install -r requirements.txt
+$ pip install -r requirements.txt
 ```
 
 ### Set up local authentication
