@@ -17,11 +17,30 @@ The resulting trace data is exported to [Stackdriver Trace](https://cloud.google
 ## Set up your local development environment
 
 ### Pre-requisites
+* `git`
 * The Python 3.7 interpreter
 * `pip`
 * `virtualenv`
 * `curl`
 * The `gcloud` command-line tool
+
+### Get the repo
+Use `git` to grab a local copy of the repo:
+```console
+$ git clone https://github.com/stewblr/google-cloud-functions_python_trace.git
+Cloning into 'google-cloud-functions_python_trace'...
+remote: Counting objects: 84, done.
+remote: Compressing objects: 100% (59/59), done.
+remote: Total 84 (delta 42), reused 63 (delta 23), pack-reused 0
+Unpacking objects: 100% (84/84), done.
+```
+
+Navigate to your local copy:
+```console
+$ cd google-cloud-functions_python_trace/
+$ ls
+LICENSE  README.md  bin  main.py  requirements.txt  test_main.py
+```
 
 ### Create and activate a virtual environment
 Use `virtualenv` to create a python3 virtual environment:
