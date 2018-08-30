@@ -104,7 +104,7 @@ Visit [Stackdriver Trace](https://console.cloud.google.com/traces/traces) in
 your Google Cloud Console to see traces associated with your test request.
 
 ## Deploy your function
-Execute the `bin/test-local` script to deploy a function named `tracing`
+Execute the `bin/deploy` script to deploy a function named `tracing`
 using `gcloud`:
 
 ```console
