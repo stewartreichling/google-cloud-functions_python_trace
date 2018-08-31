@@ -60,16 +60,14 @@ $ pip install -r requirements.txt
 ```
 
 ### Set up local authentication
-The local development approach for this sample involves interacting with live
-Google APIs (specifically, Stackdriver Trace). Calls to Google APIs must be
-authenticated. Fortunately, the client library handles authentication
-automatically once you [create a service account](https://cloud.google.com/docs/authentication/getting-started#creating_a_service_account)
+Running this sample locally involves interacting with live Google APIs. Calls
+to Google APIs must be authenticated. Fortunately, the client library handles
+authentication automatically once you [create a service account](https://cloud.google.com/docs/authentication/getting-started#creating_a_service_account)
 and [set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable](https://cloud.google.com/docs/authentication/getting-started).
 
 Note that your deployed function will automatically use a default service
 account associated with Google Cloud Functions. You may delete the service
-account use for local authentication example once you've completed local
-development.
+account created as part of this sample once you've completed local development.
 
 ### Create a Cloud Storage bucket with an empty text file
 This example downloads a text file from a Cloud Storage bucket, appends a
